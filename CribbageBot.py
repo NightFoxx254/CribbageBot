@@ -67,10 +67,13 @@ def findingPoints(points, hand):
     return points
 
 gameOn = True
+cribChooses = True
 while gameOn:
     #setting up the hand
     hand = []
     playerHand = []
+    playerPoints = 0
+    points = 0
     for i in range(6):
         hand.append(random.randint(1,10))
         playerHand.append(random.randint(1,10))
@@ -102,5 +105,43 @@ while gameOn:
         cribcard = int(input("> "))
         crib.append(cribcard)
         playerHand.pop(playerHand.indexOf(cribcard))
-        
+
+    #da crib
+    if cribChooses == True:
+        hand.append(crib)
+        cribChooses = False
+    elif cribChooses == False:
+        playerHand.append(crib)
+        cribChooses = True
+
+    # #pegging
+    # pegTotal = 0
+    # beep = True
+    # handForPegging = []
+    # otherHandForPeggin = []
+    # while beep:
+    #     print(pegTotal)
+    #     if cribChooses == True:
+    #         cribChooses = False
+    #         print("your cards are")
+    #         print(playerHand)
+    #         print("Now will you please just ACTUALLY PEG!!!!!!!!!!!1")
+    #         peg = int(input("> "))
+    #         for i in range(len(hand)):
+    #             if playerHand[i] == peg:
+    #                 pegTotal+=peg
+    #                 playerHand.pop(i)
+    #                 print(pegTotal)
+    #                 break
+    #     else:
+    #         for i in range(len(hand)):
+    #             if hand[i] + pegTotal >= 31:
+    #                 cribChooses = False
+    #                 pegTotal+=hand[i]
+    #                 hand.pop(i)
+    #                 if pegTotal == 31:
+    #                     points+=3
     
+        
+
+
