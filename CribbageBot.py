@@ -86,16 +86,15 @@ while gameOn:
                 for d in range(6):
                     if a!=b and b!=c and c!=d and d!=a:
                         testHand = [hand[a],hand[b],hand[c],hand[d]]
-                        if highestPoints < findingPoints(0,testHand):
-                            highestPoints = [findingPoints(0,testHand),a,b,c,d]
-
-    handAfterCrib = [highestPoints[1],highestPoints[2],highestPoints[3],highestPoints[4]]
-    hand.pop[highestPoints[1]]
-    hand.pop[highestPoints[2]]
-    hand.pop[highestPoints[3]]
-    hand.pop[highestPoints[4]]
-    crib.append(hand[0])
-    crib.append(hand[1])
+                        if int(findingPoints(0,testHand)) > highestPoints[0]:
+                            highestPoints = [findingPoints(0,testHand)]
+                            handAfterCrib = [a,b,c,d]
+                            hand.pop(a)
+                            hand.pop(b)
+                            hand.pop(c)
+                            hand.pop(d)
+                            crib.append(hand[0])
+                            crib.append(hand[1])
 
     print("Here are your cards")
     print(playerHand)
@@ -141,7 +140,10 @@ while gameOn:
     #                 hand.pop(i)
     #                 if pegTotal == 31:
     #                     points+=3
-    
-        
+
+    #Counting points
+    points+=findingPoints(points,hand)
+    playerPoints+=findingPoints(playerPoints,hand)
+
 
 
