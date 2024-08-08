@@ -1,149 +1,106 @@
 import random
 
 def findingPoints(points, hand):
-    #checking for pairs
+    # Checking for pairs
+    for card in hand:
+        points += (hand.count(card) - 1)
+
+    # Checking for fifteens in two cards
     for i in range(len(hand)):
-        points+= (hand.count(hand[i])-1)
+        for j in range(i + 1, len(hand)):
+            if hand[i] + hand[j] == 15:
+                points += 2
 
-    #checking for fifteens in two cards
+    # Checking for fifteens in three cards
     for i in range(len(hand)):
-        for j in range(len(hand)):
-            if i!=j and hand[i]+hand[j] == 15:
-                points+=(2/2)
+        for j in range(i + 1, len(hand)):
+            for k in range(j + 1, len(hand)):
+                if hand[i] + hand[j] + hand[k] == 15:
+                    points += 2
 
-
-    #checking for fifteens in three cards
+    # Checking for fifteens in four cards
     for i in range(len(hand)):
-        for j in range(len(hand)):
-            for l in range(len(hand)):
-                if i!=j and j!=l and hand[i]+hand[j]+hand[l] == 15:
-                    points+=(2/3)
+        for j in range(i + 1, len(hand)):
+            for k in range(j + 1, len(hand)):
+                for l in range(k + 1, len(hand)):
+                    if hand[i] + hand[j] + hand[k] + hand[l] == 15:
+                        points += 2
 
-    #checking for fifteens in four cards
-    for i in range(len(hand)):
-        for j in range(len(hand)):
-            for l in range(len(hand)):
-                for k in range(len(hand)):
-                    if i!=j and j!=l and l!=k and hand[i]+hand[j]+hand[l]+hand[k] == 15:
-                        points+=(2/4)
+    # Checking for fifteens in all the cards
+    if len(hand) == 5 and sum(hand) == 15:
+        points += 2
 
-    #checkiong for fifteens in all the cards
-    if(len(hand) == 5):
-        if hand[0]+hand[1]+hand[2]+hand[3]+hand[4] == 15:
-            points+=2
-
-    #checking for runs
+    # Checking for runs
     hand.sort()
-    do4 = True
-    do3 = True
+    run_length = 1
+    points += 0  # Initialize points for runs
 
-    #checking for runs of 5
-    for a in range(len(hand)):
-        for b in range(len(hand)):
-            for c in range(len(hand)):
-                for d in range(len(hand)):
-                    for e in range(len(hand)):
-                        if hand[a]+1 == hand[b] and hand[b]+1 == hand[c] and hand[c]+1 == hand[d] and hand[d]+1 == hand[e]:
-                            points+=5
-                            do4 = False
-                            do3 = False
-    #checking for runs of 4
-    if do4:
-        for a in range(len(hand)):
-            for b in range(len(hand)):
-                for c in range(len(hand)):
-                    for d in range(len(hand)):
-                        if hand[a]+1 == hand[b] and hand[b]+1 == hand[c] and hand[c]+1 == hand[d]:
-                            points+=4
-                            do3 = False
-    #checking for runs 3
-    if do3:
-        for a in range(len(hand)):
-            for b in range(len(hand)):
-                for c in range(len(hand)):
-                    if hand[a]+1 == hand[b] and hand[b]+1 == hand[c]:
-                        points+=3
+    for i in range(1, len(hand)):
+        if hand[i] == hand[i - 1] + 1:
+            run_length += 1
+        else:
+            if run_length >= 3:
+                points += run_length
+            run_length = 1  # Reset for the next sequence
+
+    if run_length >= 3:
+        points += run_length
 
     return points
 
 gameOn = True
 cribChooses = True
-while gameOn:
-    #setting up the hand
-    hand = []
-    playerHand = []
-    playerPoints = 0
-    points = 0
-    for i in range(6):
-        hand.append(random.randint(1,10))
-        playerHand.append(random.randint(1,10))
+points = 0
+playerPoints = 0
 
+while gameOn:
+    print(" ")
+    print(f"You have {playerPoints} points")
+    print(f"and the computer has {points} points")
+    # Setting up the hand
+    hand = [random.randint(1, 10) for _ in range(6)]
+    playerHand = [random.randint(1, 10) for _ in range(6)]
     crib = []
     highestPoints = [0]
-    for a in range(6):
-        for b in range(6):
-            for c in range(6):
-                for d in range(6):
-                    if a!=b and b!=c and c!=d and d!=a:
-                        testHand = [hand[a],hand[b],hand[c],hand[d]]
-                        if int(findingPoints(0,testHand)) > highestPoints[0]:
-                            highestPoints = [findingPoints(0,testHand)]
-                            handAfterCrib = [a,b,c,d]
-                            hand.pop(a)
-                            hand.pop(b)
-                            hand.pop(c)
-                            hand.pop(d)
-                            crib.append(hand[0])
-                            crib.append(hand[1])
 
-    print("Here are your cards")
+    for a in range(len(hand)):
+        for b in range(a + 1, len(hand)):
+            for c in range(b + 1, len(hand)):
+                for d in range(c + 1, len(hand)):
+                    testHand = [hand[a], hand[b], hand[c], hand[d]]
+                    currentPoints = findingPoints(0, testHand)
+                    if currentPoints > highestPoints[0]:
+                        highestPoints = [currentPoints]
+                        handAfterCrib = [a, b, c, d]
+
+    # Remove cards from hand for crib
+    for index in sorted(handAfterCrib, reverse=True):
+        hand.pop(index)
+
+    crib += hand[:2]  # Add the first two cards to the crib
+    hand = hand[2:]  # Remaining cards stay in hand
+
+    print("Here are your cards:")
     print(playerHand)
-
-    for i in range(2):
-        print("enter a card for the crib")
-        cribcard = int(input("> "))
-        crib.append(cribcard)
-        playerHand.pop(playerHand.indexOf(cribcard))
-
-    #da crib
-    if cribChooses == True:
-        hand.append(crib)
+    # Da crib
+    if cribChooses:
+        hand += crib
         cribChooses = False
-    elif cribChooses == False:
-        playerHand.append(crib)
+        print("It is the computers crib")
+    else:
+        playerHand += crib
         cribChooses = True
+        print("it is your crib3")
 
-    # #pegging
-    # pegTotal = 0
-    # beep = True
-    # handForPegging = []
-    # otherHandForPeggin = []
-    # while beep:
-    #     print(pegTotal)
-    #     if cribChooses == True:
-    #         cribChooses = False
-    #         print("your cards are")
-    #         print(playerHand)
-    #         print("Now will you please just ACTUALLY PEG!!!!!!!!!!!1")
-    #         peg = int(input("> "))
-    #         for i in range(len(hand)):
-    #             if playerHand[i] == peg:
-    #                 pegTotal+=peg
-    #                 playerHand.pop(i)
-    #                 print(pegTotal)
-    #                 break
-    #     else:
-    #         for i in range(len(hand)):
-    #             if hand[i] + pegTotal >= 31:
-    #                 cribChooses = False
-    #                 pegTotal+=hand[i]
-    #                 hand.pop(i)
-    #                 if pegTotal == 31:
-    #                     points+=3
-
-    #Counting points
-    points+=findingPoints(points,hand)
-    playerPoints+=findingPoints(playerPoints,hand)
-
-
-
+    for _ in range(2):
+        while True:
+            try:
+                cribcard = int(input("Enter a card for the crib: "))
+                if cribcard in playerHand:
+                    crib.append(cribcard)
+                    playerHand.remove(cribcard)
+                    break
+                else:
+                    print("You do not have that card. Please choose again.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
