@@ -104,3 +104,8 @@ while gameOn:
                     print("You do not have that card. Please choose again.")
             except ValueError:
                 print("Invalid input. Please enter a number.")
+
+    beeppity = random.randint(1,10)
+    playerHand.append(beeppity)
+    hand.append(beeppity)
+    print(f"the cut card is:{beeppity}")
