@@ -104,3 +104,30 @@ while gameOn:
                     print("You do not have that card. Please choose again.")
             except ValueError:
                 print("Invalid input. Please enter a number.")
+
+    beeppity = random.randint(1,10)
+    playerHand.append(beeppity)
+    hand.append(beeppity)
+    print(f"the cut card is:{beeppity}")
+    # Counting points
+    newpoints = findingPoints(points, hand)
+    newplayerpoints = findingPoints(0,playerHand)
+
+    print(f"Points for the computer: {newpoints}")
+    print(f"Player points: {newplayerpoints}")
+
+    points +=newpoints
+    playerPoints +=newplayerpoints
+
+    # Logic to continue or end the game can be added here
+
+    if playerPoints >=120:
+        if points <=80:
+            print("Dangggggg you skunked them")
+        else:
+            print("nice job on that win")
+    elif points >=120:
+        if playerPoints <=80:
+            print("come Onnnnnnn you got skunked")
+        else:
+            print("I mean you could do better next time")
