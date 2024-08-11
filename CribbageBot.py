@@ -112,7 +112,10 @@ while gameOn:
     print(f"Points for the computer: {newpoints}")
     print(f"Player points: {newplayerpoints}")
 
-    print(hand)
+    if newpoints > 22:
+        newpoints = 22
+    if newplayerpoints > 22:
+        newplayerpoints = 22
 
     points += newpoints
     playerPoints += newplayerpoints
